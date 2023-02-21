@@ -1,0 +1,4 @@
+{
+  // 解决Type annotations can only be used in TypeScript files.ts(8010)问题
+  "javascript.validate.enable": false,
+}
