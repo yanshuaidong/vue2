@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ajax跨域</title>
+</head>
+<body>
+  <h1>ajax跨域</h1>
+  <h5>http://127.0.0.1:5500/My-test/Cross-domain-and-cross-station/ajax-cross-domain.html</h5>
+  <button id="btn">click me</button>
+  <script>
+    const $btn = document.querySelector("#btn");
+    $btn.onclick = function() {
+      fetch("http://ep.sugarat.top/",{
+        method: 'get'
+      })
+    }
+    // 下面的请求就会成功
+    // $btn.onclick = function() {
+    //   fetch("http://127.0.0.1:5500",{
+    //     method: 'get'
+    //   })
+    // }
+  </script>
+
+</body>
+</html>

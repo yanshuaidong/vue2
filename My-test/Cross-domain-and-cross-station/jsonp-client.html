@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jsonp客户端代码</title>
+</head>
+<body>
+  <h1>jsonp客户端代码</h1>
+  <script>
+    function diyCallBackFun(param){
+      console.log(param);
+    }
+  </script>
+  <script>
+    let _script = document.createElement('script');
+    _script.src = "http://localhost:3000/path1/path2?param1=1&param2=2";
+    document.body.appendChild(_script);
+  </script>
+</body>
+</html>

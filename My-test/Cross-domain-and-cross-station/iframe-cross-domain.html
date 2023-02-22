@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iframe跨域</title>
+</head>
+<body>
+  <h1>无法跨域访问iframe中的DOM元素信息</h1>
+  <iframe src="https://sugarat.top/" width="100%" height="1000px" frameborder="0"></iframe>
+  <script>
+    const myiframe = document.querySelector("iframe");
+    console.log(myiframe.contentWindow.document.children[0].outerHTML)
+    // <html><head></head><body></body></html>
+  </script>
+</body>
+</html>
