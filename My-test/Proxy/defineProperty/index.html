@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>理解Object.defineProperty()</title>
+</head>
+<body>
+  <!-- <h1>理解Object.defineProperty()</h1> -->
+  <!-- // 晦涩难懂是因为没有实验支撑。
+  // 实践是检验真理的唯一标准 -->
+  <!-- 1、关于 writable -->
+  <!-- <script>
+    let Person = {};
+    Object.defineProperty(Person,"name",{
+      value: "jack",
+      writable: false 
+    })
+    // 1、writable 是false 可以赋值不报错单不生效。 true 生效的
+  </script> -->
+  <!-- 2、get set -->
+  <script>
+    let Person = {};
+    let temp = 'null'
+    //方法会直接在一个对象上定义一个新属性
+    Object.defineProperty(Person,"name",{
+      // 该方法返回值被用作属性值,没有return 返回undefined
+      get: function(){
+        return temp;
+      },
+      // 该方法将接受唯一参数，并将该参数的新值分配给该属性
+      // 该方法将接受唯一参数val，并将该参数name的新值12分配给该属性val
+      set: function(val){
+        temp = val;
+      }
+    })
+    Person.name = 12
+    console.log(Person.name,temp);
+    temp = 18;
+    console.log(Person.name,temp);
+    // 似乎Person.name 和 temp 同步了 你中有我我中有你了似乎。
+  </script>
+</body>
+</html>
