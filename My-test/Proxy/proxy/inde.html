@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一篇彻底理解Proxy</title>
+</head>
+<body>
+  <!-- <h1>一篇彻底理解Proxy</h1> -->
+  <script>
+    // console.log(typeof Proxy);
+    var person = {
+      name: 'jack'
+    }
+    var proxy = new Proxy(person,{
+      get: function(target,propKey){
+        if(propKey in target){
+          return target[propKey];
+        }else {
+          throw new ReferenceError(`Prop name ${propKey} does not exist.`);
+        }
+      }
+    })
+    console.log(proxy.name);
+    console.log(proxy.age);
+
+    var student = {
+      name: 'jack'
+    }
+    Object.defineProperty(student,"name",{
+      
+    })
+  </script>
+</body>
+<!--一篇彻底理解Proxy https://juejin.cn/post/6975858843729264653 -->
+</html>
