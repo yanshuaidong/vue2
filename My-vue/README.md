@@ -30,3 +30,4 @@ rollup是什么？
 3、
 ![dfa](../img/vueclassfunction.png)
 
+现在我们已经把数据给走完了，当我们引
