@@ -2,13 +2,28 @@
 class Observer{
   constructor(data){
     // new 对象的时候会走到这里。
-    this.walk(data);
+    if(Array.isArray(data)){
+      data.__proto__ = {
+        push(){
+          console.log('11111');
+        }
+      }
+      this.observeArray()
+    }else{
+      this.walk(data);
+    }
   }
   walk(data){//循环对象对属性依次劫持。
     // 重新定义属性
     Object.keys(data).forEach(key => {
       defineReactive(data,key,data[key])    
     });
+  }
+  // 
+  observeArray(data){
+    data.forEach(item => {
+      observe(item)
+    })
   }
 }
 // 劫持属性
@@ -20,6 +35,7 @@ export function defineReactive(target,key,value){
     },
     set(newValue){
       if(newValue === value) return ;
+      observe(newValue)
       value = newValue;
     }
   })
@@ -57,3 +73,52 @@ export function observe(data){
 // new observe（）开辟一片堆空间，再次建立一个数据劫持。对所有的对象进行数据劫持。如果不是对象就返回上一层。
 // 核心就是循环对象，给对象使用defineReactive把属性重新定义，如果值还是对象的话。我们对对象进行递归操作。这样我们就可以监控到用户的取值与赋值。当你去vm取值，我们从vm._data中去找。
 // 实现对属性的劫持，深度属性劫持。
+
+
+// 如果是个对象的话我们需要再次代理，当用户vm.address = {name:'jack'} 这样其实是合法的。这样做，我们传的是个对象了，走到set方法中，我们就对它再次代理。我们之前有address，然后我们对address重新赋值了。
+// 在设置值的时候需要加一个这样的操作。但是如果data中有数组呢？我们并不是没有代理数组，而是对数组的每个属性进行了代理。这就导致了一个问题，如果数组很大，我们需要改很多，用户很少使用vm.hobby[11] = 12这种形式的代码来改数据。这种情况很少，我们修改数组很少用索引去修改。但是内部做劫持会浪费性能。
+// 用户一般修改数组，都是通过方法来修改的，比如push，shift等。
+// 所以我们考虑，如果是数组，我们就不循环去做每个属性的劫持了，而是，我们在构造对象的时候，就是new observe（）的时候，在遍历之前，在walk方法运行前，提前判断传入的数据是否是数组，if（Array。isArray（data））做处理，不是数组就走wakl方法。对每个属性都代理。如果是数组。我们无非就是监控用户有没有调用数组的原生方法。
+// 这样我们就可以重写数组的方法。一共有7个变异方法。为什么说是变异方法，因为这几个方法是可以修改数组本身的。对于vm.hobby.push('1')方法。出啦正常的数组外，我们还有数组里面嵌套对象的 
+// 是数组要做的两件事：
+// 1、修改数组。vm.hobby.push('1')。要更新
+// 2、将数组中的引用类型劫持。 比如vm.hobby[2].a = 100这种操作我们也要更新
+// 是数组的话我们希望对数组中的每一个值进行观测。无论是如何嵌套。
+// 定义方法observeArray方法。在是数组的情况下调用这个方法。吧当前的数据传过来。里面直接data。foreach（）拿到每一项，拿到每一项之后，在再次对遍历出来的item调用observe方法。对对象进行劫持
+// 当前数组上的所有方法。咋重写呢？在Array。isarrgy（data）等于true重写一个对象，data。————propto———— = 里面增加一些方法，比如push。我们给当前数组的原型链，重新指向了一个新的原型对象。
+// 我们还希望能保留原本的push，只是在原本的push方法上加强。保留数组原有的特性，重写部分方法。
+// 单独建立一个文件array。js希望重写数组中的部分方法。把重写后的对象返回，就可以了。
+// 我们要拿到数组的原来的那些内容，咱们拿到呢？数组的原型。我们需要拿到老的数组的原型。
+// let oldarrayproptype = Array。prototype；获取数组的原型。但是我们不能直接去修改。如果
+// Array。prototype。push = function(){} 这样就把原来的push方法给干掉了。
+// 换一种扩展方式：object.create(oldarrayproptype) 这样我们就生成了一个新的数组的方法。
+// 这样newArrayproto。--proto-- 等于 oldarrayproptype
+// 我们取的方法依然可以在上面取，我们加newArrayProto.push = function(){}一个方法是加在newArrayProto实例上的，并没有改变oldArrayProto（数组原型）上的方法。
+// 所以不用担心被覆盖掉  有哪些方法会,找到所有的变异方法。reverse反序，sort排序，splice删除，七个变异方法。
+// let methods = [
+//   'push',
+//   'pop',
+//   'shift',
+//   'unshift',
+//   'reverse',
+//   'sort',
+//   'splice',
+// ]
+// newArrayProto.push = function(){}
+// 后面的concat和slice都不会改变原来数组。只有着七个方法可以改变原来数组，这点需要注意
+// 我们要重写这些变异方法，（会改变原数组的方法）。在newArrayProto实例对象上增加这个方法
+// 里面调用原来的方法。我们掉push，掉pop都需要追加一下，所以内部其实都一样，在原来的里 oldArrayProto
+// 掉用新的，默认调用原来的，
+// 我们调用的时候需要把参数传入，比如我们调用arr。push（1，2，3），这时候参数在...args,我们应该传给原生的方法
+// oldArrayProto[method]这样调用等于我们调用push执行了,改回来this。后面的参数呢？放进去。
+
+methods.forEach(method =>{
+  newArrayProto[method] = function(...args){
+    oldArrayProto[method].call(this,...args)
+  }
+})
+
+
+
+
+
