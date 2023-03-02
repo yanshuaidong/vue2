@@ -1,33 +1,39 @@
-echo "# vue2" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/yanshuaidong/vue2.git
-git push -u origin main
-
-git remote add origin https://github.com/yanshuaidong/vue2.git
-git branch -M main
-git push -u origin main
+实现数组的劫持。
 
 
+##### vm.hobby.push({a:1})后为什么没有劫持数据
 
-"build": "rollup -cw"
-c = config 使用配置文件 w = watch 监控
+如果我们使用vm.hobby.push({a:1})数组中添加数据，发现并没有对数据进行劫持。原因就是我们只是劫持了数组的方法，并没有对传入的数据进行处理。
 
-vue2 支持ie9 以上  Object.defineProperty 不支持低版本
-proxy是es6，浏览器不支持proxy就不能用vue3
-rollup是什么？
-是打包工具，帮我们生成vue。js
+##### 如何对类似push({a:1})这样的方法中的a属性进行劫持？
+
+```
+数组中放一个新的值，如果依旧是对象，我们还需要继续监测。
+需要注意两点：
+1、传的参数是否都是对象。
+2、七种方法需要不同处理。
+使用
+switch()
+
+```
 
 
-1、vue的核心特点是什么？
-响应式的数据变化。
 
-2、简单说一下响应式数据变化？
-响应式的数据变化。就是数据变化了我们可以监控到数据的变化，比如取值，赋值
 
-3、
-![dfa](../img/vueclassfunction.png)
 
-现在我们已经把数据给走完了，当我们引
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
