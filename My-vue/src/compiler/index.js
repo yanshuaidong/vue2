@@ -1,3 +1,8 @@
+const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z]*`;
+const qnameCapture = `((?:${ncname}\\:)?${ncname})`;
+const startTagOpen = new RegExp(`^<${qnameCapture}`)
+
+
 // 多模板进行编译处理
 export function compileToFunction(template){
   // 1、将template转化成ast语法树
