@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload PNG Image</title>
+</head>
+<body>
+  <h1>Upload PNG Image</h1>
+  <input type="file" id="file-input">
+  <button id="upload-btn">Upload</button>
+  <div id="result"></div>
+
+  <script>
+    const fileInput = document.getElementById('file-input');
+    const uploadBtn = document.getElementById('upload-btn');
+    const resultDiv = document.getElementById('result');
+
+    uploadBtn.addEventListener('click', () => {
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'http://127.0.0.1:3000/upload');
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resultDiv.textContent = 'Upload success!';
+        } else {
+          resultDiv.textContent = `Upload failed: ${xhr.status}`;
+        }
+      };
+      xhr.send(formData);
+    });
+  </script>
+</body>
+</html>
